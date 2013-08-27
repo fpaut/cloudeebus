@@ -49,6 +49,10 @@ from twisted.python import log
 # XML parser module
 from xml.etree.ElementTree import XMLParser
 
+# For debug only
+import os
+ 
+
 ###############################################################################
 
 VERSION = "0.5.100"
@@ -213,7 +217,7 @@ class ExecCode:
     # compile function. Skip if already in sync.
     def compile(self) :
         if not self.exec_code_valid :
-            self.exec_code = compile(self.exec_string, "<string>", "exec")
+            self.exec_code = compile(self.exec_string, "<MyDbusClass>", "exec")
         self.exec_code_valid = True
 
     def execute(self) :
@@ -631,6 +635,17 @@ class CloudeebusService:
             self.dynDBusClasses[className] = DynDBusClass(className, self.globalCtx, self.localCtx)
             self.dynDBusClasses[className].createDBusServiceFromXML(xmlTemplate)
             self.dynDBusClasses[className].declare()
+
+            # For Debug only
+            if (1):
+                if (1): ## Force deletion
+                    if os.access('./MyDbusClass_'+className+'.py', os.R_OK) == True:
+                        os.remove('./MyDbusClass_'+className+'.py')
+                    
+                    if os.access('./MyDbusClass_'+className+'.py', os.R_OK) == False:
+                        f = open('./MyDbusClass_'+className+'.py', 'w')
+                        f.write(self.dynDBusClasses[className].class_code.exec_string)
+                        f.close()
 
         ## Class already exist, instanciate it if not already instanciated
         if (self.serviceAgents.has_key(className) == False):
