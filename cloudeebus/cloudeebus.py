@@ -22,7 +22,10 @@
 #
 
 
-import argparse, dbus, json, sys
+import dbus
+import json
+import sys
+import argparse
 
 from twisted.internet import glib2reactor
 # Configure the twisted mainloop to be run inside the glib mainloop.
